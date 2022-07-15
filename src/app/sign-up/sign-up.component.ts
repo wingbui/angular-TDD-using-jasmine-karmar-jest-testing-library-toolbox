@@ -44,7 +44,7 @@ export class SignUpComponent implements OnInit {
     // });
 
     this.http
-      .post('/api/v1/signUp', {
+      .post('/api/v1/users', {
         username: this.username,
         email: this.email,
         password: this.password,
