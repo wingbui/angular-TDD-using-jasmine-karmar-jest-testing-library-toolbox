@@ -1,26 +1,31 @@
-import { screen, render } from '@testing-library/angular';
-import {
-  HttpClientTestingModule,
-  HttpTestingController,
-} from '@angular/common/http/testing';
-import userEvent from '@testing-library/user-event';
+import { HttpClientModule } from '@angular/common/http';
 import { rest } from 'msw';
+import { screen, render, waitFor } from '@testing-library/angular';
 import { setupServer } from 'msw/node';
-
-import 'whatwg-fetch';
+import userEvent from '@testing-library/user-event';
 
 import { SignUpComponent } from './sign-up.component';
-import { TestBed } from '@angular/core/testing';
+import { SignUpRequest } from './types/sign-up-request';
 
+let reqBody: SignUpRequest;
 const server = setupServer(
   rest.post('/api/v1/users', (req, res, ctx) => {
+    reqBody = req.body as SignUpRequest;
     return res(ctx.status(201), ctx.json({}));
   })
 );
 
+beforeAll(() => {
+  server.listen();
+});
+
+afterAll(() => {
+  server.close();
+});
+
 const setup = async () => {
   await render(SignUpComponent, {
-    imports: [HttpClientTestingModule],
+    imports: [HttpClientModule],
   });
 };
 
@@ -67,8 +72,9 @@ describe('Layout', () => {
 });
 
 describe('Interaction', () => {
-  it('it should enable the button when Password and Repeat Password match', async () => {
+  it('should enable the button when Password and Repeat Password match', async () => {
     await setup();
+
     const inputPassword = screen.getByLabelText('Password');
     const inputPasswordRepeat = screen.getByLabelText('Password Repeat');
     const user = userEvent;
@@ -83,7 +89,6 @@ describe('Interaction', () => {
   it('should send username, email and password to backend after clicking Sign Up button', async () => {
     await setup();
 
-    const httpTestingController = TestBed.inject(HttpTestingController);
     const usernameInput = screen.getByLabelText('Username');
     const emailInput = screen.getByLabelText('Email');
     const passwordInput = screen.getByLabelText('Password');
@@ -98,13 +103,12 @@ describe('Interaction', () => {
     const button = screen.getByRole('button', { name: 'Sign Up' });
     await userEvent.click(button);
 
-    const req = httpTestingController.expectOne('/api/v1/users');
-    const reqBody = req.request.body;
-
-    expect(reqBody).toEqual({
-      username: 'username',
-      email: 'email',
-      password: 'password',
+    await waitFor(() => {
+      expect(reqBody).toEqual({
+        username: 'username',
+        email: 'email',
+        password: 'password',
+      });
     });
   });
 });
