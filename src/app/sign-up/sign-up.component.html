@@ -25,5 +25,11 @@
     />
   </div>
 
-  <button mat-flat-button color="primary" [disabled]="isDisabled()">Sign Up</button>
+  <button
+    mat-flat-button
+    color="primary"
+    [disabled]="isDisabled() || apiProgress"
+  >
+    {{ apiProgress ? "Submitting..." : "Sign Up" }}
+  </button>
 </form>
