@@ -33,16 +33,6 @@ export class SignUpComponent implements OnInit {
   }
 
   onClickSignUp() {
-    // fetch('/api/v1/signUp', {
-    //   method: 'POST',
-    //   body: JSON.stringify({
-    //     username: this.username,
-    //     email: this.email,
-    //     password: this.password,
-    //   }),
-    //   headers: { 'Content-type': 'application/json' },
-    // });
-
     this.http
       .post('/api/v1/users', {
         username: this.username,
