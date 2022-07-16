@@ -116,7 +116,7 @@ describe('SignUpComponent', () => {
       const signUp = fixture.nativeElement as HTMLElement;
       const button = signUp.querySelector('button');
 
-      expect(button?.textContent).toBe('Sign Up');
+      expect(button?.textContent?.trim()).toBe('Sign Up');
     });
 
     it('should disable the button initially', () => {
@@ -128,28 +128,11 @@ describe('SignUpComponent', () => {
   });
 
   describe('Interaction', () => {
-    it('should enable the button when Password and Repeat Password match', () => {
-      const signUp = fixture.nativeElement as HTMLElement;
-      const button = signUp.querySelector('button');
+    let button: HTMLButtonElement | null;
+    let httpTestingController: HttpTestingController;
 
-      const passwordInput = signUp.querySelector(
-        'input[id="password"]'
-      ) as HTMLInputElement;
-      passwordInput.value = 'p@ssword';
-      passwordInput.dispatchEvent(new Event('input'));
-
-      const passwordRepeatInput = signUp.querySelector(
-        'input[id="passwordRepeat"]'
-      ) as HTMLInputElement;
-      passwordRepeatInput.value = 'p@ssword';
-      passwordRepeatInput.dispatchEvent(new Event('input'));
-
-      fixture.detectChanges();
-      expect(button?.disabled).toBe(false);
-    });
-
-    it('should send username, email and password to backend after clicking Sign Up button', () => {
-      const httpTestingController = TestBed.inject(HttpTestingController);
+    const setup = () => {
+      httpTestingController = TestBed.inject(HttpTestingController);
 
       const signUp = fixture.nativeElement as HTMLElement;
       const usernameInput = signUp.querySelector(
@@ -179,7 +162,32 @@ describe('SignUpComponent', () => {
 
       fixture.detectChanges();
 
+      button = signUp.querySelector('button');
+    };
+
+    it('should enable the button when Password and Repeat Password match', () => {
+      const signUp = fixture.nativeElement as HTMLElement;
       const button = signUp.querySelector('button');
+
+      const passwordInput = signUp.querySelector(
+        'input[id="password"]'
+      ) as HTMLInputElement;
+      passwordInput.value = 'p@ssword';
+      passwordInput.dispatchEvent(new Event('input'));
+
+      const passwordRepeatInput = signUp.querySelector(
+        'input[id="passwordRepeat"]'
+      ) as HTMLInputElement;
+      passwordRepeatInput.value = 'p@ssword';
+      passwordRepeatInput.dispatchEvent(new Event('input'));
+
+      fixture.detectChanges();
+      expect(button?.disabled).toBe(false);
+    });
+
+    it('should send username, email and password to backend after clicking Sign Up button', () => {
+      setup();
+
       button?.click();
 
       const req = httpTestingController.expectOne('/api/1.0/users');
@@ -190,6 +198,23 @@ describe('SignUpComponent', () => {
         email: 'email',
         password: 'password',
       });
+    });
+
+    it('should disable the Sign Up button when there is an ongoing api', () => {
+      setup();
+      button?.click();
+      fixture.detectChanges();
+      button?.click();
+      httpTestingController.expectOne('/api/1.0/users');
+      expect(button?.disabled).toBe(true);
+    });
+
+    it('should display the Submitting... text after submitting the Sign Up form', () => {
+      setup();
+      button?.click();
+      fixture.detectChanges();
+      expect(httpTestingController.expectOne('/api/1.0/users'));
+      expect(button?.textContent?.trim()).toBe('Submitting...');
     });
   });
 });
