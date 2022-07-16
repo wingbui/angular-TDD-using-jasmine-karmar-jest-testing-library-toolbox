@@ -1,9 +1,11 @@
 <h1>Sign Up</h1>
+
 <form (submit)="onClickSignUp(); $event.preventDefault()">
   <div>
     <label for="username">Username</label>
     <input id="username" (input)="onChangeUsername($event)" />
   </div>
+
   <div>
     <label for="email">Email</label>
     <input id="email" placeholder="email" (input)="onChangeEmail($event)" />
@@ -22,5 +24,6 @@
       (input)="onChangePasswordRepeat($event)"
     />
   </div>
-  <button [disabled]="isDisabled()">Sign Up</button>
+
+  <button mat-flat-button color="primary" [disabled]="isDisabled()">Sign Up</button>
 </form>
