@@ -182,7 +182,7 @@ describe('SignUpComponent', () => {
       const button = signUp.querySelector('button');
       button?.click();
 
-      const req = httpTestingController.expectOne('/api/v1/users');
+      const req = httpTestingController.expectOne('/api/1.0/users');
       const reqBody = req.request.body;
 
       expect(reqBody).toEqual({

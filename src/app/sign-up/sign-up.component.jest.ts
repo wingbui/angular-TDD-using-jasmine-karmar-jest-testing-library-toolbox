@@ -9,7 +9,7 @@ import { SignUpRequest } from './types/sign-up-request';
 
 let reqBody: SignUpRequest;
 const server = setupServer(
-  rest.post('/api/v1/users', (req, res, ctx) => {
+  rest.post('/api/1.0/users', (req, res, ctx) => {
     reqBody = req.body as SignUpRequest;
     return res(ctx.status(201), ctx.json({}));
   })
