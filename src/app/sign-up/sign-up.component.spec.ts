@@ -166,22 +166,7 @@ describe('SignUpComponent', () => {
     };
 
     it('should enable the button when Password and Repeat Password match', () => {
-      const signUp = fixture.nativeElement as HTMLElement;
-      const button = signUp.querySelector('button');
-
-      const passwordInput = signUp.querySelector(
-        'input[id="password"]'
-      ) as HTMLInputElement;
-      passwordInput.value = 'p@ssword';
-      passwordInput.dispatchEvent(new Event('input'));
-
-      const passwordRepeatInput = signUp.querySelector(
-        'input[id="passwordRepeat"]'
-      ) as HTMLInputElement;
-      passwordRepeatInput.value = 'p@ssword';
-      passwordRepeatInput.dispatchEvent(new Event('input'));
-
-      fixture.detectChanges();
+      setup();
       expect(button?.disabled).toBe(false);
     });
 
@@ -211,6 +196,7 @@ describe('SignUpComponent', () => {
 
     it('should display the Submitting... text after submitting the Sign Up form', () => {
       setup();
+      expect(button?.textContent?.trim()).toBe('Sign Up');
       button?.click();
       fixture.detectChanges();
       expect(httpTestingController.expectOne('/api/1.0/users'));
