@@ -8,12 +8,18 @@ import { SignUpComponent } from './sign-up.component';
 import { SignUpRequest } from './types/sign-up-request';
 
 let reqBody: SignUpRequest;
+let count = 0;
 const server = setupServer(
   rest.post('/api/1.0/users', (req, res, ctx) => {
+    count++;
     reqBody = req.body as SignUpRequest;
     return res(ctx.status(201), ctx.json({}));
   })
 );
+
+beforeEach(() => {
+  count = 0;
+});
 
 beforeAll(() => {
   server.listen();
@@ -72,23 +78,8 @@ describe('Layout', () => {
 });
 
 describe('Interaction', () => {
-  it('should enable the button when Password and Repeat Password match', async () => {
-    await setup();
-
-    const inputPassword = screen.getByLabelText('Password');
-    const inputPasswordRepeat = screen.getByLabelText('Password Repeat');
-    const user = userEvent;
-    await user.type(inputPassword, 'p@ssword');
-    await user.type(inputPasswordRepeat, 'p@ssword');
-
-    const button = screen.getByRole('button', { name: 'Sign Up' });
-
-    expect(button).toBeEnabled();
-  });
-
-  it('should send username, email and password to backend after clicking Sign Up button', async () => {
-    await setup();
-
+  let button: HTMLButtonElement;
+  const setupForm = async () => {
     const usernameInput = screen.getByLabelText('Username');
     const emailInput = screen.getByLabelText('Email');
     const passwordInput = screen.getByLabelText('Password');
@@ -100,7 +91,19 @@ describe('Interaction', () => {
     await user.type(passwordInput, 'password');
     await user.type(passwordRepeatInput, 'password');
 
-    const button = screen.getByRole('button', { name: 'Sign Up' });
+    button = screen.getByRole('button', { name: 'Sign Up' });
+  };
+  it('should enable the button when Password and Repeat Password match', async () => {
+    await setup();
+    await setupForm();
+
+    expect(button).toBeEnabled();
+  });
+
+  it('should send username, email and password to backend after clicking Sign Up button', async () => {
+    await setup();
+    await setupForm();
+
     await userEvent.click(button);
 
     await waitFor(() => {
@@ -109,6 +112,18 @@ describe('Interaction', () => {
         email: 'email',
         password: 'password',
       });
+    });
+  });
+
+  it('should disable the Sign Up button when there is an ongoing api', async () => {
+    await setup();
+    await setupForm();
+
+    await userEvent.click(button);
+    await userEvent.click(button);
+
+    await waitFor(() => {
+      expect(count).toBe(1);
     });
   });
 });
