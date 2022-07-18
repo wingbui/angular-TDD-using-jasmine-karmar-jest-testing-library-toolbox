@@ -130,11 +130,12 @@ describe('SignUpComponent', () => {
   describe('Interaction', () => {
     let button: HTMLButtonElement | null;
     let httpTestingController: HttpTestingController;
+    let signUp: HTMLElement;
 
     const setup = () => {
       httpTestingController = TestBed.inject(HttpTestingController);
 
-      const signUp = fixture.nativeElement as HTMLElement;
+      signUp = fixture.nativeElement as HTMLElement;
       const usernameInput = signUp.querySelector(
         'input[id="username"]'
       ) as HTMLInputElement;
@@ -202,5 +203,35 @@ describe('SignUpComponent', () => {
       expect(httpTestingController.expectOne('/api/1.0/users'));
       expect(button?.textContent?.trim()).toBe('Submitting...');
     });
+
+    it('should display success alert after successfully registering', () => {
+      setup();
+
+      expect(signUp.querySelector('.alert-success')).toBeFalsy();
+
+      button?.click();
+      const req = httpTestingController.expectOne('/api/1.0/users');
+      req.flush({});
+
+      fixture.detectChanges();
+
+      expect(signUp.querySelector('.alert-success')?.textContent).toContain(
+        'Success! Activate email please'
+      );
+    });
+
+    it('should hide the sign-up form after successfully registering' , () => {
+      setup();
+      expect(signUp.querySelector('form[data-testid="sign-up-form"]')).toBeTruthy()
+
+      button?.click()
+      const req = httpTestingController.expectOne(
+        '/api/1.0/users'
+      )
+      req.flush({})
+      fixture.detectChanges()
+
+      expect(signUp.querySelector('form[data-testid="sign-up-form"]')).toBeFalsy()
+    })
   });
 });

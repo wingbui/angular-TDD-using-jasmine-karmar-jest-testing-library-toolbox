@@ -1,6 +1,10 @@
 <h1>Sign Up</h1>
 
-<form (submit)="onClickSignUp(); $event.preventDefault()">
+<form
+  (submit)="onClickSignUp(); $event.preventDefault()"
+  *ngIf="!isSuccess; else successMessage"
+  data-testid="sign-up-form"
+>
   <div>
     <label for="username">Username</label>
     <input id="username" (input)="onChangeUsername($event)" />
@@ -38,3 +42,7 @@
     <!-- {{ apiProgress ? "Submitting..." : "Sign Up" }} -->
   </button>
 </form>
+
+<ng-template #successMessage>
+  <div class="alert-success" role="alert">Success! Activate email please</div>
+</ng-template>
