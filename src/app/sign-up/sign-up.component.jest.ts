@@ -126,4 +126,15 @@ describe('Interaction', () => {
       expect(count).toBe(1);
     });
   });
+
+  it('should display the Submitting... text after submitting the Sign Up form', async () => {
+    await setup();
+    await setupForm();
+    expect(button.textContent?.trim()).toBe('Sign Up');
+
+    await userEvent.click(button);
+    await waitFor(() => {
+      expect(button.textContent?.trim()).toBe('Submitting...');
+    });
+  });
 });
