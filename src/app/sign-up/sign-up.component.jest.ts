@@ -152,4 +152,30 @@ describe('Interaction', () => {
 
     expect(screen.queryByRole('status', { hidden: true })).toBeInTheDocument();
   });
+
+  it('should display success alert after successfully registering', async () => {
+    await setup();
+    await setupForm();
+
+    expect(
+      screen.queryByText('Success! Activate email please')
+    ).not.toBeInTheDocument();
+
+    await userEvent.click(button);
+
+    expect(
+      await screen.findByText('Success! Activate email please')
+    ).toBeInTheDocument();
+  });
+
+  it('should hide the sign-up form after successfully registering', async () => {
+    await setup();
+    await setupForm();
+
+    const form = screen.getByTestId('sign-up-form')
+
+    await userEvent.click(button)
+
+    expect(form).toBeInTheDocument();
+  });
 });
