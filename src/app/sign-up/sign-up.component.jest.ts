@@ -93,6 +93,7 @@ describe('Interaction', () => {
 
     button = screen.getByRole('button', { name: 'Sign Up' });
   };
+
   it('should enable the button when Password and Repeat Password match', async () => {
     await setup();
     await setupForm();
@@ -127,14 +128,28 @@ describe('Interaction', () => {
     });
   });
 
-  it('should display the Submitting... text after submitting the Sign Up form', async () => {
+  it('should display the Submitting... text after submitting', async () => {
     await setup();
     await setupForm();
     expect(button.textContent?.trim()).toBe('Sign Up');
 
     await userEvent.click(button);
+
     await waitFor(() => {
       expect(button.textContent?.trim()).toBe('Submitting...');
     });
+  });
+
+  it('should display the Submitting element after clicking submit', async () => {
+    await setup();
+    await setupForm();
+
+    expect(
+      screen.queryByRole('status', { hidden: true })
+    ).not.toBeInTheDocument();
+
+    await userEvent.click(button);
+
+    expect(screen.queryByRole('status', { hidden: true })).toBeInTheDocument();
   });
 });

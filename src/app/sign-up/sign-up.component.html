@@ -30,9 +30,11 @@
     color="primary"
     [disabled]="isDisabled() || apiProgress"
   >
-    <!-- <span *ngIf="apiProgress">Submitting...</span> -->
-    <!-- <span *ngIf="!apiProgress"> Sign Up </span> -->
+    <span *ngIf="apiProgress" role="status" aria-hidden="true"
+      >Submitting...</span
+    >
+    <span *ngIf="!apiProgress"> Sign Up </span>
 
-    {{ apiProgress ? "Submitting..." : "Sign Up" }}
+    <!-- {{ apiProgress ? "Submitting..." : "Sign Up" }} -->
   </button>
 </form>
