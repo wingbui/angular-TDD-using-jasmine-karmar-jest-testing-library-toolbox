@@ -9,7 +9,10 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 })
 export class SignUpComponent implements OnInit {
   form = new FormGroup({
-    username: new FormControl('', [Validators.required]),
+    username: new FormControl('', [
+      Validators.required,
+      Validators.minLength(2),
+    ]),
     email: new FormControl(''),
     password: new FormControl(''),
     passwordRepeat: new FormControl(''),

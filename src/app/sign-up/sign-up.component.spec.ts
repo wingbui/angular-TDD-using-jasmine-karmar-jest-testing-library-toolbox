@@ -244,5 +244,51 @@ describe('SignUpComponent', () => {
       control?.setValue('');
       expect(control?.valid).toBeFalsy();
     });
-  })
+
+    it('should show the message Username is required when username value is null', () => {
+      const signUp = fixture.nativeElement as HTMLElement;
+      expect(
+        signUp.querySelector(
+          'ul[data-testid="username-validation"]'
+        ) as HTMLElement
+      ).toBeNull();
+
+      const usernameInput = signUp.querySelector(
+        'input[id="username"]'
+      ) as HTMLInputElement;
+
+      usernameInput.dispatchEvent(new Event('focus'));
+      usernameInput.dispatchEvent(new Event('blur'));
+      fixture.detectChanges();
+
+      expect(
+        signUp.querySelector('ul[data-testid="username-validation"]')
+          ?.textContent
+      ).toContain('Username is required');
+    });
+
+    it('should show the message Username should be 2 characters up', () => {
+      const signUp = fixture.nativeElement as HTMLElement;
+      expect(
+        signUp.querySelector(
+          'ul[data-testid="username-validation"]'
+        ) as HTMLElement
+      ).toBeNull();
+
+      const usernameInput = signUp.querySelector(
+        'input[id="username"]'
+      ) as HTMLInputElement;
+
+      usernameInput.value = '1'
+      usernameInput.dispatchEvent(new Event('input'));
+      usernameInput.dispatchEvent(new Event('focus'));
+      usernameInput.dispatchEvent(new Event('blur'));
+      fixture.detectChanges();
+
+      expect(
+        signUp.querySelector('ul[data-testid="username-validation"]')
+          ?.textContent
+      ).toContain('Username should be 2 characters up');
+    });
+  });
 });

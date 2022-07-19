@@ -9,6 +9,17 @@
     <div>
       <label for="username">Username</label>
       <input id="username" formControlName="username" />
+      <ul
+        *ngIf="form.get('username')?.touched && form.get('username')?.errors"
+        data-testid="username-validation"
+      >
+        <li *ngIf="form.get('username')?.errors?.['required']">
+          Username is required
+        </li>
+        <li *ngIf="form.get('username')?.errors?.['minlength']">
+          Username should be 2 characters up
+        </li>
+      </ul>
     </div>
 
     <div>
@@ -39,11 +50,11 @@
         >Submitting...</span
       >
       <span *ngIf="!apiProgress"> Sign Up </span>
-
       <!-- {{ apiProgress ? "Submitting..." : "Sign Up" }} -->
     </button>
   </form>
 </div>
+
 <ng-template #successMessage>
   <div class="alert-success" role="alert">Success! Activate email please</div>
 </ng-template>
