@@ -204,5 +204,19 @@ describe('SignUpComponent', () => {
 
       expect(screen.queryByText(message)).toBeInTheDocument();
     });
+
+    it('should show the message Username should be 2 characters up', async () => {
+      await setup();
+      const message = 'Username should be 2 characters up';
+      expect(screen.queryByText(message)).not.toBeInTheDocument();
+
+      const usernameInput = screen.getByLabelText('Username') as HTMLElement;
+
+      const user = userEvent;
+      await user.type(usernameInput, '1');
+      await user.tab();
+
+      expect(screen.queryByText(message)).toBeInTheDocument();
+    });
   });
 });

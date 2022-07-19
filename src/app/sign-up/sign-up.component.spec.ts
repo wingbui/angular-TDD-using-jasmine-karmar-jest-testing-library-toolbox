@@ -279,7 +279,7 @@ describe('SignUpComponent', () => {
         'input[id="username"]'
       ) as HTMLInputElement;
 
-      usernameInput.value = '1'
+      usernameInput.value = '1';
       usernameInput.dispatchEvent(new Event('input'));
       usernameInput.dispatchEvent(new Event('focus'));
       usernameInput.dispatchEvent(new Event('blur'));
