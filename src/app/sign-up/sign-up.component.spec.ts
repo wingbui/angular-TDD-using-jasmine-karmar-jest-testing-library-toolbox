@@ -238,5 +238,11 @@ describe('SignUpComponent', () => {
     });
   });
 
-  
+  describe('Validation', () => {
+    it('should validate username be required', () => {
+      const control = component.form.get('username');
+      control?.setValue('');
+      expect(control?.valid).toBeFalsy();
+    });
+  })
 });
