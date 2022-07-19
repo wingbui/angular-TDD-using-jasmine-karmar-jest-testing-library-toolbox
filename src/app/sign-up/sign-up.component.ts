@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { FormControl, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-sign-up',
@@ -7,10 +8,12 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./sign-up.component.css'],
 })
 export class SignUpComponent implements OnInit {
-  username = '';
-  email = '';
-  password: string = '';
-  passwordRepeat: string = '';
+  form = new FormGroup({
+    username: new FormControl(''),
+    email: new FormControl(''),
+    password: new FormControl(''),
+    passwordRepeat: new FormControl(''),
+  });
   apiProgress = false;
   isSuccess = false;
 
@@ -18,29 +21,13 @@ export class SignUpComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  onChangeUsername(event: Event) {
-    this.username = (event.target as HTMLInputElement)?.value;
-  }
-
-  onChangeEmail(event: Event) {
-    this.email = (event.target as HTMLInputElement)?.value;
-  }
-
-  onChangePassword(event: Event) {
-    this.password = (event.target as HTMLInputElement)?.value;
-  }
-
-  onChangePasswordRepeat(event: Event) {
-    this.passwordRepeat = (event.target as HTMLInputElement)?.value;
-  }
-
   onClickSignUp() {
     this.apiProgress = true;
     this.http
       .post('/api/1.0/users', {
-        username: this.username,
-        email: this.email,
-        password: this.password,
+        username: this.form.get('username')?.value,
+        email: this.form.get('email')?.value,
+        password: this.form.get('password')?.value,
       })
       .subscribe(() => {
         this.isSuccess = true;
@@ -48,6 +35,9 @@ export class SignUpComponent implements OnInit {
   }
 
   isDisabled(): boolean {
-    return this.password ? this.password !== this.passwordRepeat : true;
+    return this.form.get('password')?.value
+      ? this.form.get('password')?.value !==
+          this.form.get('passwordRepeat')?.value
+      : true;
   }
 }

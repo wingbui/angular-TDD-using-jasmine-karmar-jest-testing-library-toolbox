@@ -3,6 +3,7 @@ import { rest } from 'msw';
 import { screen, render, waitFor } from '@testing-library/angular';
 import { setupServer } from 'msw/node';
 import userEvent from '@testing-library/user-event';
+import { ReactiveFormsModule } from '@angular/forms';
 
 import { SignUpComponent } from './sign-up.component';
 import { SignUpRequest } from './types/sign-up-request';
@@ -31,7 +32,7 @@ afterAll(() => {
 
 const setup = async () => {
   await render(SignUpComponent, {
-    imports: [HttpClientModule],
+    imports: [HttpClientModule, ReactiveFormsModule],
   });
 };
 
@@ -172,9 +173,9 @@ describe('Interaction', () => {
     await setup();
     await setupForm();
 
-    const form = screen.getByTestId('sign-up-form')
+    const form = screen.getByTestId('sign-up-form');
 
-    await userEvent.click(button)
+    await userEvent.click(button);
 
     expect(form).toBeInTheDocument();
   });

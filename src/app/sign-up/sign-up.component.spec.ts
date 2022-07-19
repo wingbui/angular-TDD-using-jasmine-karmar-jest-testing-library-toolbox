@@ -5,6 +5,7 @@ import {
 } from '@angular/common/http/testing';
 
 import { SignUpComponent } from './sign-up.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 describe('SignUpComponent', () => {
   let component: SignUpComponent;
@@ -13,7 +14,7 @@ describe('SignUpComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [SignUpComponent],
-      imports: [HttpClientTestingModule],
+      imports: [HttpClientTestingModule, ReactiveFormsModule],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SignUpComponent);
@@ -220,18 +221,22 @@ describe('SignUpComponent', () => {
       );
     });
 
-    it('should hide the sign-up form after successfully registering' , () => {
+    it('should hide the sign-up form after successfully registering', () => {
       setup();
-      expect(signUp.querySelector('form[data-testid="sign-up-form"]')).toBeTruthy()
+      expect(
+        signUp.querySelector('form[data-testid="sign-up-form"]')
+      ).toBeTruthy();
 
-      button?.click()
-      const req = httpTestingController.expectOne(
-        '/api/1.0/users'
-      )
-      req.flush({})
-      fixture.detectChanges()
+      button?.click();
+      const req = httpTestingController.expectOne('/api/1.0/users');
+      req.flush({});
+      fixture.detectChanges();
 
-      expect(signUp.querySelector('form[data-testid="sign-up-form"]')).toBeFalsy()
-    })
+      expect(
+        signUp.querySelector('form[data-testid="sign-up-form"]')
+      ).toBeFalsy();
+    });
   });
+
+  
 });

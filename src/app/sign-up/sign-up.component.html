@@ -1,48 +1,49 @@
 <h1>Sign Up</h1>
 
-<form
-  (submit)="onClickSignUp(); $event.preventDefault()"
-  *ngIf="!isSuccess; else successMessage"
-  data-testid="sign-up-form"
->
-  <div>
-    <label for="username">Username</label>
-    <input id="username" (input)="onChangeUsername($event)" />
-  </div>
-
-  <div>
-    <label for="email">Email</label>
-    <input id="email" placeholder="email" (input)="onChangeEmail($event)" />
-  </div>
-
-  <div>
-    <label for="password">Password</label>
-    <input id="password" type="password" (input)="onChangePassword($event)" />
-  </div>
-
-  <div>
-    <label for="passwordRepeat">Password Repeat</label>
-    <input
-      id="passwordRepeat"
-      type="password"
-      (input)="onChangePasswordRepeat($event)"
-    />
-  </div>
-
-  <button
-    mat-flat-button
-    color="primary"
-    [disabled]="isDisabled() || apiProgress"
+<div *ngIf="!isSuccess; else successMessage">
+  <form
+    (submit)="onClickSignUp(); $event.preventDefault()"
+    data-testid="sign-up-form"
+    [formGroup]="form"
   >
-    <span *ngIf="apiProgress" role="status" aria-hidden="true"
-      >Submitting...</span
+    <div>
+      <label for="username">Username</label>
+      <input id="username" formControlName="username" />
+    </div>
+
+    <div>
+      <label for="email">Email</label>
+      <input id="email" placeholder="email" formControlName="email" />
+    </div>
+
+    <div>
+      <label for="password">Password</label>
+      <input id="password" type="password" formControlName="password" />
+    </div>
+
+    <div>
+      <label for="passwordRepeat">Password Repeat</label>
+      <input
+        id="passwordRepeat"
+        type="password"
+        formControlName="passwordRepeat"
+      />
+    </div>
+
+    <button
+      mat-flat-button
+      color="primary"
+      [disabled]="isDisabled() || apiProgress"
     >
-    <span *ngIf="!apiProgress"> Sign Up </span>
+      <span *ngIf="apiProgress" role="status" aria-hidden="true"
+        >Submitting...</span
+      >
+      <span *ngIf="!apiProgress"> Sign Up </span>
 
-    <!-- {{ apiProgress ? "Submitting..." : "Sign Up" }} -->
-  </button>
-</form>
-
+      <!-- {{ apiProgress ? "Submitting..." : "Sign Up" }} -->
+    </button>
+  </form>
+</div>
 <ng-template #successMessage>
   <div class="alert-success" role="alert">Success! Activate email please</div>
 </ng-template>
