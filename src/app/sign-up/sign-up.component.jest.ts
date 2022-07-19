@@ -1,6 +1,6 @@
 import { HttpClientModule } from '@angular/common/http';
 import { rest } from 'msw';
-import { screen, render, waitFor } from '@testing-library/angular';
+import { screen, render, waitFor, fireEvent } from '@testing-library/angular';
 import { setupServer } from 'msw/node';
 import userEvent from '@testing-library/user-event';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -36,147 +36,173 @@ const setup = async () => {
   });
 };
 
-describe('Layout', () => {
-  it('should have a header h1', async () => {
-    await setup();
-    expect(
-      screen.getByRole('heading', { name: 'Sign Up' })
-    ).toBeInTheDocument();
+describe('SignUpComponent', () => {
+  describe('Layout', () => {
+    it('should have a header h1', async () => {
+      await setup();
+      expect(
+        screen.getByRole('heading', { name: 'Sign Up' })
+      ).toBeInTheDocument();
+    });
+
+    it('should have a Username input', async () => {
+      await setup();
+      expect(screen.getByLabelText('Username')).toBeInTheDocument();
+    });
+
+    it('should have a Email input', async () => {
+      await setup();
+      expect(screen.getByLabelText('Email')).toBeInTheDocument();
+    });
+
+    it('should have a Password input', async () => {
+      await setup();
+      expect(screen.getByLabelText('Password')).toBeInTheDocument();
+    });
+
+    it('should have a password type for Password input', async () => {
+      await setup();
+      expect(screen.getByLabelText('Password')).toHaveAttribute(
+        'type',
+        'password'
+      );
+    });
+
+    it('should have Sign Up button', async () => {
+      await setup();
+      expect(
+        screen.getByRole('button', { name: 'Sign Up' })
+      ).toBeInTheDocument();
+    });
+
+    it('should disable the button initially', async () => {
+      await setup();
+      expect(screen.getByRole('button', { name: 'Sign Up' })).toBeDisabled();
+    });
   });
 
-  it('should have a Username input', async () => {
-    await setup();
-    expect(screen.getByLabelText('Username')).toBeInTheDocument();
-  });
+  describe('Interaction', () => {
+    let button: HTMLButtonElement;
+    const setupForm = async () => {
+      const usernameInput = screen.getByLabelText('Username');
+      const emailInput = screen.getByLabelText('Email');
+      const passwordInput = screen.getByLabelText('Password');
+      const passwordRepeatInput = screen.getByLabelText('Password Repeat');
 
-  it('should have a Email input', async () => {
-    await setup();
-    expect(screen.getByLabelText('Email')).toBeInTheDocument();
-  });
+      const user = userEvent;
+      await user.type(usernameInput, 'username');
+      await user.type(emailInput, 'email');
+      await user.type(passwordInput, 'password');
+      await user.type(passwordRepeatInput, 'password');
 
-  it('should have a Password input', async () => {
-    await setup();
-    expect(screen.getByLabelText('Password')).toBeInTheDocument();
-  });
+      button = screen.getByRole('button', { name: 'Sign Up' });
+    };
 
-  it('should have a password type for Password input', async () => {
-    await setup();
-    expect(screen.getByLabelText('Password')).toHaveAttribute(
-      'type',
-      'password'
-    );
-  });
+    it('should enable the button when Password and Repeat Password match', async () => {
+      await setup();
+      await setupForm();
 
-  it('should have Sign Up button', async () => {
-    await setup();
-    expect(screen.getByRole('button', { name: 'Sign Up' })).toBeInTheDocument();
-  });
+      expect(button).toBeEnabled();
+    });
 
-  it('should disable the button initially', async () => {
-    await setup();
-    expect(screen.getByRole('button', { name: 'Sign Up' })).toBeDisabled();
-  });
-});
+    it('should send username, email and password to backend after clicking Sign Up button', async () => {
+      await setup();
+      await setupForm();
 
-describe('Interaction', () => {
-  let button: HTMLButtonElement;
-  const setupForm = async () => {
-    const usernameInput = screen.getByLabelText('Username');
-    const emailInput = screen.getByLabelText('Email');
-    const passwordInput = screen.getByLabelText('Password');
-    const passwordRepeatInput = screen.getByLabelText('Password Repeat');
+      await userEvent.click(button);
 
-    const user = userEvent;
-    await user.type(usernameInput, 'username');
-    await user.type(emailInput, 'email');
-    await user.type(passwordInput, 'password');
-    await user.type(passwordRepeatInput, 'password');
-
-    button = screen.getByRole('button', { name: 'Sign Up' });
-  };
-
-  it('should enable the button when Password and Repeat Password match', async () => {
-    await setup();
-    await setupForm();
-
-    expect(button).toBeEnabled();
-  });
-
-  it('should send username, email and password to backend after clicking Sign Up button', async () => {
-    await setup();
-    await setupForm();
-
-    await userEvent.click(button);
-
-    await waitFor(() => {
-      expect(reqBody).toEqual({
-        username: 'username',
-        email: 'email',
-        password: 'password',
+      await waitFor(() => {
+        expect(reqBody).toEqual({
+          username: 'username',
+          email: 'email',
+          password: 'password',
+        });
       });
     });
-  });
 
-  it('should disable the Sign Up button when there is an ongoing api', async () => {
-    await setup();
-    await setupForm();
+    it('should disable the Sign Up button when there is an ongoing api', async () => {
+      await setup();
+      await setupForm();
 
-    await userEvent.click(button);
-    await userEvent.click(button);
+      await userEvent.click(button);
+      await userEvent.click(button);
 
-    await waitFor(() => {
-      expect(count).toBe(1);
+      await waitFor(() => {
+        expect(count).toBe(1);
+      });
+    });
+
+    it('should display the Submitting... text after submitting', async () => {
+      await setup();
+      await setupForm();
+      expect(button.textContent?.trim()).toBe('Sign Up');
+
+      await userEvent.click(button);
+
+      await waitFor(() => {
+        expect(button.textContent?.trim()).toBe('Submitting...');
+      });
+    });
+
+    it('should display the Submitting element after clicking submit', async () => {
+      await setup();
+      await setupForm();
+
+      expect(
+        screen.queryByRole('status', { hidden: true })
+      ).not.toBeInTheDocument();
+
+      await userEvent.click(button);
+
+      expect(
+        screen.queryByRole('status', { hidden: true })
+      ).toBeInTheDocument();
+    });
+
+    it('should display success alert after successfully registering', async () => {
+      await setup();
+      await setupForm();
+
+      expect(
+        screen.queryByText('Success! Activate email please')
+      ).not.toBeInTheDocument();
+
+      await userEvent.click(button);
+
+      expect(
+        await screen.findByText('Success! Activate email please')
+      ).toBeInTheDocument();
+    });
+
+    it('should hide the sign-up form after successfully registering', async () => {
+      await setup();
+      await setupForm();
+
+      const form = screen.getByTestId('sign-up-form');
+
+      await userEvent.click(button);
+
+      expect(form).toBeInTheDocument();
     });
   });
 
-  it('should display the Submitting... text after submitting', async () => {
-    await setup();
-    await setupForm();
-    expect(button.textContent?.trim()).toBe('Sign Up');
+  describe('Validation', () => {
+    it('should show the message Username is required when username value is null', async () => {
+      await setup();
+      const message = 'Username is required';
+      expect(screen.queryByText(message)).not.toBeInTheDocument();
 
-    await userEvent.click(button);
+      const usernameInput = screen.getByLabelText('Username') as HTMLElement;
 
-    await waitFor(() => {
-      expect(button.textContent?.trim()).toBe('Submitting...');
+      const user = userEvent;
+      await user.click(usernameInput);
+      await user.tab();
+
+      // alternative way for userEvent
+      // fireEvent.focus(usernameInput)
+      // fireEvent.blur(usernameInput)
+
+      expect(screen.queryByText(message)).toBeInTheDocument();
     });
-  });
-
-  it('should display the Submitting element after clicking submit', async () => {
-    await setup();
-    await setupForm();
-
-    expect(
-      screen.queryByRole('status', { hidden: true })
-    ).not.toBeInTheDocument();
-
-    await userEvent.click(button);
-
-    expect(screen.queryByRole('status', { hidden: true })).toBeInTheDocument();
-  });
-
-  it('should display success alert after successfully registering', async () => {
-    await setup();
-    await setupForm();
-
-    expect(
-      screen.queryByText('Success! Activate email please')
-    ).not.toBeInTheDocument();
-
-    await userEvent.click(button);
-
-    expect(
-      await screen.findByText('Success! Activate email please')
-    ).toBeInTheDocument();
-  });
-
-  it('should hide the sign-up form after successfully registering', async () => {
-    await setup();
-    await setupForm();
-
-    const form = screen.getByTestId('sign-up-form');
-
-    await userEvent.click(button);
-
-    expect(form).toBeInTheDocument();
   });
 });
