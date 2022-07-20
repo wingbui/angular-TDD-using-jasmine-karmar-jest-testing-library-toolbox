@@ -241,6 +241,8 @@ describe('SignUpComponent', () => {
   describe('Validation', () => {
     const testCases = [
       { field: 'email', value: '', error: 'Email is required' },
+      { field: 'password', value: '', error: 'Password is required' },
+      { field: 'password', value: '12345', error: 'Password should be 6 characters up' },
     ];
 
     testCases.forEach(({field,value, error}) => {

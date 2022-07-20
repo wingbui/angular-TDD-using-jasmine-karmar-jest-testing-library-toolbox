@@ -13,12 +13,32 @@ export class SignUpComponent implements OnInit {
       Validators.required,
       Validators.minLength(2),
     ]),
-    email: new FormControl('', [Validators.required, Validators.email]),
-    password: new FormControl(''),
+    email: new FormControl('', [
+      Validators.required,
+      Validators.email,
+    ]),
+    password: new FormControl('', [
+      Validators.required,
+      Validators.minLength(6),
+    ]),
     passwordRepeat: new FormControl(''),
   });
   apiProgress = false;
   isSuccess = false;
+
+  get passwordError() {
+    const field = this.form.get('password');
+    const errors = [];
+    if (field?.errors && field.touched) {
+      if (field.errors['required']) {
+        errors.push('Password is required');
+      }
+      if (field.errors['minlength']) {
+        errors.push('Password should be 6 characters up');
+      }
+    }
+    return errors;
+  }
 
   constructor(private http: HttpClient) {}
 

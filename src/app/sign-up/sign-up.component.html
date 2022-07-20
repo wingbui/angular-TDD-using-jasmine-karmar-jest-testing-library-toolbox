@@ -39,6 +39,10 @@
     <div>
       <label for="password">Password</label>
       <input id="password" type="password" formControlName="password" />
+
+      <ul *ngIf="passwordError.length > 0" data-testid="password-validation">
+        <li *ngFor="let error of passwordError">{{ error }}</li>
+      </ul>
     </div>
 
     <div>
