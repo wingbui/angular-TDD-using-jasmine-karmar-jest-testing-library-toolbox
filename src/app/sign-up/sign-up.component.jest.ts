@@ -188,8 +188,10 @@ describe('SignUpComponent', () => {
 
   describe('Validation', () => {
     it.each`
-      label      | inputValue              | message
-      ${'Email'} | ${'{space}{backspace}'} | ${'Email is required'}
+      label                | inputValue              | message
+      ${'Email'}           | ${'{space}{backspace}'} | ${'Email is required'}
+      ${'Password Repeat'} | ${'{space}{backspace}'} | ${'Password Repeat is required'}
+      ${'Password Repeat'} | ${'123'}                | ${'Passwords mismatched'}
     `(
       'should show $message when $label has $inputValue ',
       async ({ label, inputValue, message }) => {
