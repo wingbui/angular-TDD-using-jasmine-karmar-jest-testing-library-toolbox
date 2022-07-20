@@ -242,24 +242,37 @@ describe('SignUpComponent', () => {
     const testCases = [
       { field: 'email', value: '', error: 'Email is required' },
       { field: 'password', value: '', error: 'Password is required' },
-      { field: 'password', value: '12345', error: 'Password should be 6 characters up' },
+      {
+        field: 'password',
+        value: '12345',
+        error: 'Password should be 6 characters up',
+      },
+      { field: 'passwordRepeat', value: '', error: 'Password Repeat is required' },
+      { field: 'passwordRepeat', value: '1245', error: 'Passwords mismatched' },
     ];
 
-    testCases.forEach(({field,value, error}) => {
+    testCases.forEach(({ field, value, error }) => {
       it(`should show the message ${error}`, () => {
-        const signUp = fixture.nativeElement as HTMLElement
-        const input = signUp.querySelector(`input[id="${field}"]`) as HTMLInputElement
+        const signUp = fixture.nativeElement as HTMLElement;
+        const input = signUp.querySelector(
+          `input[id="${field}"]`
+        ) as HTMLInputElement;
 
-        expect(signUp.querySelector(`ul[data-testid="${field}-validation"]`)).toBeNull()
+        expect(
+          signUp.querySelector(`ul[data-testid="${field}-validation"]`)
+        ).toBeNull();
 
-        input.value = value
-        input.dispatchEvent(new Event('input'))
-        input.dispatchEvent(new Event('blur'))
-        fixture.detectChanges()
+        input.value = value;
+        input.dispatchEvent(new Event('input'));
+        input.dispatchEvent(new Event('blur'));
+        fixture.detectChanges();
 
-        expect(signUp.querySelector(`ul[data-testid="${field}-validation"]`)?.textContent).toContain(`${error}`)
-      })
-    })
+        expect(
+          signUp.querySelector(`ul[data-testid="${field}-validation"]`)
+            ?.textContent
+        ).toContain(`${error}`);
+      });
+    });
 
     it('should validate username be required', () => {
       const control = component.form.get('username');
