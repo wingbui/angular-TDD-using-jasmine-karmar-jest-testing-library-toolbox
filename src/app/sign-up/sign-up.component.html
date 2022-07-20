@@ -25,6 +25,15 @@
     <div>
       <label for="email">Email</label>
       <input id="email" placeholder="email" formControlName="email" />
+      <ul
+        *ngIf="form.get('email')?.touched && form.get('email')?.errors"
+        data-testid="email-validation"
+      >
+        <li *ngIf="form.get('email')?.errors?.['required']">
+          Email is required
+        </li>
+        <li *ngIf="form.get('email')?.errors?.['email']">Invalid Email</li>
+      </ul>
     </div>
 
     <div>

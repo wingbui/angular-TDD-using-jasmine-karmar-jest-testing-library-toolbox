@@ -239,6 +239,26 @@ describe('SignUpComponent', () => {
   });
 
   describe('Validation', () => {
+    const testCases = [
+      { field: 'email', value: '', error: 'Email is required' },
+    ];
+
+    testCases.forEach(({field,value, error}) => {
+      it(`should show the message ${error}`, () => {
+        const signUp = fixture.nativeElement as HTMLElement
+        const input = signUp.querySelector(`input[id="${field}"]`) as HTMLInputElement
+
+        expect(signUp.querySelector(`ul[data-testid="${field}-validation"]`)).toBeNull()
+
+        input.value = value
+        input.dispatchEvent(new Event('input'))
+        input.dispatchEvent(new Event('blur'))
+        fixture.detectChanges()
+
+        expect(signUp.querySelector(`ul[data-testid="${field}-validation"]`)?.textContent).toContain(`${error}`)
+      })
+    })
+
     it('should validate username be required', () => {
       const control = component.form.get('username');
       control?.setValue('');
@@ -290,6 +310,24 @@ describe('SignUpComponent', () => {
       ).toContain('Username should be 2 characters up');
     });
 
-  });
+    it('should show the message Invalid email', () => {
+      const signUp = fixture.nativeElement as HTMLElement;
+      const emailInput = signUp.querySelector(
+        'input[id="email"]'
+      ) as HTMLInputElement;
 
+      expect(
+        signUp.querySelector('ul[data-testid="email-validation"]')
+      ).toBeNull();
+
+      emailInput.value = 'wrong-format';
+      emailInput.dispatchEvent(new Event('input'));
+      emailInput.dispatchEvent(new Event('blur'));
+      fixture.detectChanges();
+
+      expect(
+        signUp.querySelector('ul[data-testid="email-validation"]')?.textContent
+      ).toContain('Invalid Email');
+    });
+  });
 });
