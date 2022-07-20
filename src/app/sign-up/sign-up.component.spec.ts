@@ -257,7 +257,7 @@ describe('SignUpComponent', () => {
         'input[id="username"]'
       ) as HTMLInputElement;
 
-      usernameInput.dispatchEvent(new Event('focus'));
+      usernameInput.dispatchEvent(new Event('input'));
       usernameInput.dispatchEvent(new Event('blur'));
       fixture.detectChanges();
 
@@ -281,7 +281,6 @@ describe('SignUpComponent', () => {
 
       usernameInput.value = '1';
       usernameInput.dispatchEvent(new Event('input'));
-      usernameInput.dispatchEvent(new Event('focus'));
       usernameInput.dispatchEvent(new Event('blur'));
       fixture.detectChanges();
 
@@ -290,5 +289,7 @@ describe('SignUpComponent', () => {
           ?.textContent
       ).toContain('Username should be 2 characters up');
     });
+
   });
+
 });
