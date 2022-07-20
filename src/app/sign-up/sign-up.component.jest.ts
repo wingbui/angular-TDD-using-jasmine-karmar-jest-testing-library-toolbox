@@ -187,6 +187,24 @@ describe('SignUpComponent', () => {
   });
 
   describe('Validation', () => {
+    it.each`
+      label      | inputValue              | message
+      ${'Email'} | ${'{space}{backspace}'} | ${'Email is required'}
+    `(
+      'should show $message when $label has $inputValue ',
+      async ({ label, inputValue, message }) => {
+        await setup();
+        expect(screen.queryByText(message)).not.toBeInTheDocument();
+        const input = screen.getByLabelText(label);
+
+        const user = userEvent;
+        await user.type(input, inputValue);
+        await user.tab();
+
+        expect(screen.queryByText(message)).toBeInTheDocument();
+      }
+    );
+
     it('should show the message Username is required when username value is null', async () => {
       await setup();
       const message = 'Username is required';
