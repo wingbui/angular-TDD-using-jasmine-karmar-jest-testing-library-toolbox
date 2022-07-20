@@ -52,6 +52,9 @@
         type="password"
         formControlName="passwordRepeat"
       />
+      <ul *ngIf="passwordRepeatError.length > 0" data-testid="passwordRepeat-validation">
+        <li *ngFor="let error of passwordRepeatError">{{ error }}</li>
+      </ul>
     </div>
 
     <button

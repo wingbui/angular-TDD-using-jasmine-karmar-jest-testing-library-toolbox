@@ -1,28 +1,29 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-
+import { passwordMatchValidator } from './validators/password-match-validator';
 @Component({
   selector: 'app-sign-up',
   templateUrl: './sign-up.component.html',
   styleUrls: ['./sign-up.component.css'],
 })
 export class SignUpComponent implements OnInit {
-  form = new FormGroup({
-    username: new FormControl('', [
-      Validators.required,
-      Validators.minLength(2),
-    ]),
-    email: new FormControl('', [
-      Validators.required,
-      Validators.email,
-    ]),
-    password: new FormControl('', [
-      Validators.required,
-      Validators.minLength(6),
-    ]),
-    passwordRepeat: new FormControl(''),
-  });
+  form = new FormGroup(
+    {
+      username: new FormControl('', [
+        Validators.required,
+        Validators.minLength(2),
+      ]),
+      email: new FormControl('', [Validators.required, Validators.email]),
+      password: new FormControl('', [
+        Validators.required,
+        Validators.minLength(6),
+      ]),
+      passwordRepeat: new FormControl('', [Validators.required]),
+    },
+    { validators: passwordMatchValidator }
+  );
+
   apiProgress = false;
   isSuccess = false;
 
@@ -36,6 +37,21 @@ export class SignUpComponent implements OnInit {
       if (field.errors['minlength']) {
         errors.push('Password should be 6 characters up');
       }
+    }
+    return errors;
+  }
+
+  get passwordRepeatError() {
+    const field = this.form.get('passwordRepeat');
+    const errors = [];
+    if (field?.errors && field.touched) {
+      if (field.errors['required']) {
+        errors.push('Password Repeat is required');
+      }
+    }
+    if (this.form?.errors?.['passwordMatch'] && field?.touched) {
+      console.log('hi');
+      errors.push('Passwords mismatched');
     }
     return errors;
   }
