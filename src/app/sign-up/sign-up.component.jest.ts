@@ -1,9 +1,9 @@
 import { HttpClientModule } from '@angular/common/http';
+import { ReactiveFormsModule } from '@angular/forms';
 import { rest } from 'msw';
 import { screen, render, waitFor, fireEvent } from '@testing-library/angular';
 import { setupServer } from 'msw/node';
 import userEvent from '@testing-library/user-event';
-import { ReactiveFormsModule } from '@angular/forms';
 
 import { SignUpComponent } from './sign-up.component';
 import { SignUpRequest } from './types/sign-up-request';

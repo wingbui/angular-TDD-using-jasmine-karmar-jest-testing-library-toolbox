@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+
 import { passwordMatchValidator } from './validators/password-match-validator';
+import { UserService } from './services/user.service';
+import { SignUpRequest } from './types/sign-up-request';
 @Component({
   selector: 'app-sign-up',
   templateUrl: './sign-up.component.html',
@@ -56,21 +58,21 @@ export class SignUpComponent implements OnInit {
     return errors;
   }
 
-  constructor(private http: HttpClient) {}
+  constructor(private userService: UserService) {}
 
   ngOnInit(): void {}
 
   onClickSignUp() {
     this.apiProgress = true;
-    this.http
-      .post('/api/1.0/users', {
-        username: this.form.get('username')?.value,
-        email: this.form.get('email')?.value,
-        password: this.form.get('password')?.value,
-      })
-      .subscribe(() => {
-        this.isSuccess = true;
-      });
+    let data: SignUpRequest = {
+      username: this.form.get('username')?.value || '',
+      email: this.form.get('email')?.value || '',
+      password: this.form.get('password')?.value || '',
+    };
+
+    this.userService.signUp(data).subscribe(() => {
+      this.isSuccess = true;
+    });
   }
 
   isDisabled(): boolean {
