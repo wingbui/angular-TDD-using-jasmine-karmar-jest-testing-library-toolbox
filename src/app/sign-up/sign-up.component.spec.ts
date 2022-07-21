@@ -155,6 +155,7 @@ describe('SignUpComponent', () => {
 
       emailInput.value = 'email';
       emailInput.dispatchEvent(new Event('input'));
+      emailInput.dispatchEvent(new Event('blur'));
 
       passwordInput.value = 'password';
       passwordInput.dispatchEvent(new Event('input'));

@@ -33,6 +33,9 @@
           Email is required
         </li>
         <li *ngIf="form.get('email')?.errors?.['email']">Invalid Email</li>
+        <li *ngIf="form.get('email')?.errors?.['uniqueEmail']">
+          Email already in use
+        </li>
       </ul>
     </div>
 
@@ -52,7 +55,10 @@
         type="password"
         formControlName="passwordRepeat"
       />
-      <ul *ngIf="passwordRepeatError.length > 0" data-testid="passwordRepeat-validation">
+      <ul
+        *ngIf="passwordRepeatError.length > 0"
+        data-testid="passwordRepeat-validation"
+      >
         <li *ngFor="let error of passwordRepeatError">{{ error }}</li>
       </ul>
     </div>

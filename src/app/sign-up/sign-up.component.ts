@@ -4,6 +4,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { passwordMatchValidator } from './validators/password-match-validator';
 import { UserService } from './services/user.service';
 import { SignUpRequest } from './types/sign-up-request';
+import { UniqueEmailValidator } from './validators/unique-email-validator';
 @Component({
   selector: 'app-sign-up',
   templateUrl: './sign-up.component.html',
@@ -16,7 +17,14 @@ export class SignUpComponent implements OnInit {
         Validators.required,
         Validators.minLength(2),
       ]),
-      email: new FormControl('', [Validators.required, Validators.email]),
+      email: new FormControl('', {
+        validators: [Validators.required, Validators.email],
+        asyncValidators: [
+          this.uniqueEmailValidator.validate.bind(this.uniqueEmailValidator),
+        ],
+        updateOn: 'blur',
+      }),
+
       password: new FormControl('', [
         Validators.required,
         Validators.minLength(6),
@@ -52,13 +60,15 @@ export class SignUpComponent implements OnInit {
       }
     }
     if (this.form?.errors?.['passwordMatch'] && field?.touched) {
-      console.log('hi');
       errors.push('Passwords mismatched');
     }
     return errors;
   }
 
-  constructor(private userService: UserService) {}
+  constructor(
+    private userService: UserService,
+    private uniqueEmailValidator: UniqueEmailValidator
+  ) {}
 
   ngOnInit(): void {}
 
