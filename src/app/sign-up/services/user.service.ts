@@ -12,4 +12,9 @@ export class UserService {
   signUp(data: SignUpRequest) {
     return this.http.post('/api/1.0/users', data);
   }
+
+  isEmailTaken(value: string) {
+    console.log(value)
+    return this.http.post('/api/1.0/users/email', { email: value });
+  }
 }
