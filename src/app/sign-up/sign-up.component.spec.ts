@@ -247,7 +247,11 @@ describe('SignUpComponent', () => {
         value: '12345',
         error: 'Password should be 6 characters up',
       },
-      { field: 'passwordRepeat', value: '', error: 'Password Repeat is required' },
+      {
+        field: 'passwordRepeat',
+        value: '',
+        error: 'Password Repeat is required',
+      },
       { field: 'passwordRepeat', value: '1245', error: 'Passwords mismatched' },
     ];
 
@@ -343,6 +347,38 @@ describe('SignUpComponent', () => {
       expect(
         signUp.querySelector('ul[data-testid="email-validation"]')?.textContent
       ).toContain('Invalid Email');
+    });
+
+    it('should show the message Email already in use', () => {
+      const httpTestingController = TestBed.inject(HttpTestingController);
+      const signUp = fixture.nativeElement as HTMLElement;
+      const emailInput = signUp.querySelector(
+        'input[id="email"]'
+      ) as HTMLInputElement;
+      expect(
+        signUp.querySelector('ul[data-testid="email-validation"]')
+      ).toBeNull();
+
+      emailInput.value = 'already-in-use-email@email.com';
+      emailInput.dispatchEvent(new Event('input'));
+      emailInput.dispatchEvent(new Event('blur'));
+
+      const request = httpTestingController.expectOne(
+        ({ url, method, body }) => {
+          if (url === '/api/1.0/user/email' && method === 'POST') {
+            return body.email === 'already-in-use-email@email.com';
+          }
+          return false;
+        }
+      );
+
+      request.flush({});
+
+      fixture.detectChanges();
+
+      expect(
+        signUp.querySelector('ul[data-testid="email-validation"]')?.textContent
+      ).toContain('Email already in use');
     });
   });
 });
