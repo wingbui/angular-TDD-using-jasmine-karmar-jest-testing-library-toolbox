@@ -33,6 +33,7 @@ const server = setupServer(
 
 beforeEach(() => {
   count = 0;
+  server.resetHandlers();
 });
 
 beforeAll(() => {
@@ -196,6 +197,28 @@ describe('SignUpComponent', () => {
       await userEvent.click(button);
 
       expect(form).toBeInTheDocument();
+    });
+
+    it('should display error alert after fail registration unique email validation', async () => {
+      server.use(
+        rest.post('/api/1.0/users', (req, res, ctx) => {
+          return res(
+            ctx.status(400),
+            ctx.json({
+              validationErrors: { email: 'Email already in use' },
+            })
+          );
+        })
+      );
+      await setup();
+      await setupForm();
+
+      const user = userEvent;
+      await user.click(button);
+
+      expect(
+        await screen.findByText('Email already in use')
+      ).toBeInTheDocument();
     });
   });
 
