@@ -156,7 +156,7 @@ describe('SignUpComponent', () => {
       usernameInput.value = 'username';
       usernameInput.dispatchEvent(new Event('input'));
 
-      emailInput.value = 'email';
+      emailInput.value = 'email@mail.com';
       emailInput.dispatchEvent(new Event('input'));
       emailInput.dispatchEvent(new Event('blur'));
 
@@ -186,7 +186,7 @@ describe('SignUpComponent', () => {
 
       expect(reqBody).toEqual({
         username: 'username',
-        email: 'email',
+        email: 'email@mail.com',
         password: 'password',
       });
     });
@@ -241,7 +241,34 @@ describe('SignUpComponent', () => {
       ).toBeFalsy();
     });
 
-    it('should display error alert after failed registration', async () => {})
+    it('should display error alert after failed registration', async () => {
+      await setup();
+
+      expect(
+        signUp.querySelector(
+          'ul[data-testid="email-validation"]'
+        ) as HTMLElement
+      ).toBeNull();
+
+      button?.click();
+
+      const req = httpTestingController.expectOne('/api/1.0/users');
+      req.flush(
+        {
+          validationErrors: { email: 'Email already in use' },
+        },
+        {
+          status: 400,
+          statusText: 'Bad Request',
+        }
+      );
+
+      fixture.detectChanges();
+
+      expect(
+        signUp.querySelector('ul[data-testid="email-validation"]')?.textContent
+      ).toContain('Email already in use');
+    });
   });
 
   describe('Validation', () => {

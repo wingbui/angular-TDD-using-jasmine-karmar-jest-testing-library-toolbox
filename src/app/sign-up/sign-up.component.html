@@ -36,6 +36,9 @@
         <li *ngIf="form.get('email')?.errors?.['uniqueEmail']">
           Email already in use
         </li>
+        <li *ngIf="form.get('email')?.errors?.['backend']">
+          {{ form.get("email")?.errors?.["backend"] }}
+        </li>
       </ul>
     </div>
 
