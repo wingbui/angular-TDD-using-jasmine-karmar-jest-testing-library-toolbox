@@ -133,10 +133,13 @@ describe('SignUpComponent', () => {
     let httpTestingController: HttpTestingController;
     let signUp: HTMLElement;
 
-    const setup = () => {
+    const setup = async () => {
       httpTestingController = TestBed.inject(HttpTestingController);
 
       signUp = fixture.nativeElement as HTMLElement;
+
+      await fixture.whenStable();
+
       const usernameInput = signUp.querySelector(
         'input[id="username"]'
       ) as HTMLInputElement;
@@ -168,13 +171,13 @@ describe('SignUpComponent', () => {
       button = signUp.querySelector('button');
     };
 
-    it('should enable the button when Password and Repeat Password match', () => {
-      setup();
+    it('should enable the button when Password and Repeat Password match', async () => {
+      await setup();
       expect(button?.disabled).toBe(false);
     });
 
-    it('should send username, email and password to backend after clicking Sign Up button', () => {
-      setup();
+    it('should send username, email and password to backend after clicking Sign Up button', async () => {
+      await setup();
 
       button?.click();
 
@@ -188,8 +191,8 @@ describe('SignUpComponent', () => {
       });
     });
 
-    it('should disable the Sign Up button when there is an ongoing api', () => {
-      setup();
+    it('should disable the Sign Up button when there is an ongoing api', async () => {
+      await setup();
       button?.click();
       fixture.detectChanges();
       button?.click();
@@ -197,8 +200,8 @@ describe('SignUpComponent', () => {
       expect(button?.disabled).toBe(true);
     });
 
-    it('should display the Submitting... text after submitting the Sign Up form', () => {
-      setup();
+    it('should display the Submitting... text after submitting the Sign Up form', async () => {
+      await setup();
       expect(button?.textContent?.trim()).toBe('Sign Up');
       button?.click();
       fixture.detectChanges();
@@ -206,8 +209,8 @@ describe('SignUpComponent', () => {
       expect(button?.textContent?.trim()).toBe('Submitting...');
     });
 
-    it('should display success alert after successfully registering', () => {
-      setup();
+    it('should display success alert after successfully registering', async () => {
+      await setup();
 
       expect(signUp.querySelector('.alert-success')).toBeFalsy();
 
@@ -222,8 +225,8 @@ describe('SignUpComponent', () => {
       );
     });
 
-    it('should hide the sign-up form after successfully registering', () => {
-      setup();
+    it('should hide the sign-up form after successfully registering', async () => {
+      await setup();
       expect(
         signUp.querySelector('form[data-testid="sign-up-form"]')
       ).toBeTruthy();
@@ -237,6 +240,8 @@ describe('SignUpComponent', () => {
         signUp.querySelector('form[data-testid="sign-up-form"]')
       ).toBeFalsy();
     });
+
+    it('should display error alert after failed registration', async () => {})
   });
 
   describe('Validation', () => {
