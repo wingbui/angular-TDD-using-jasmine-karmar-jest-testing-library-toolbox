@@ -8,6 +8,10 @@ import userEvent from '@testing-library/user-event';
 import { SignUpComponent } from './sign-up.component';
 import { SignUpRequest } from './types/sign-up-request';
 
+type UniqueEmailCheck = {
+  email: string;
+};
+
 let reqBody: SignUpRequest;
 let count = 0;
 const server = setupServer(
@@ -15,6 +19,15 @@ const server = setupServer(
     count++;
     reqBody = req.body as SignUpRequest;
     return res(ctx.status(201), ctx.json({}));
+  }),
+  rest.post('/api/1.0/user/email', (req, res, ctx) => {
+    let body = req.body as UniqueEmailCheck;
+
+    if (body.email === 'non-unique-email@email.com') {
+      return res(ctx.status(200), ctx.json({}));
+    } else {
+      return res(ctx.status(404), ctx.json({}));
+    }
   })
 );
 
@@ -188,10 +201,11 @@ describe('SignUpComponent', () => {
 
   describe('Validation', () => {
     it.each`
-      label                | inputValue              | message
-      ${'Email'}           | ${'{space}{backspace}'} | ${'Email is required'}
-      ${'Password Repeat'} | ${'{space}{backspace}'} | ${'Password Repeat is required'}
-      ${'Password Repeat'} | ${'123'}                | ${'Passwords mismatched'}
+      label                | inputValue                      | message
+      ${'Email'}           | ${'{space}{backspace}'}         | ${'Email is required'}
+      ${'Email'}           | ${'non-unique-email@email.com'} | ${'Email already in use'}
+      ${'Password Repeat'} | ${'{space}{backspace}'}         | ${'Password Repeat is required'}
+      ${'Password Repeat'} | ${'123'}                        | ${'Passwords mismatched'}
     `(
       'should show $message when $label has $inputValue ',
       async ({ label, inputValue, message }) => {
@@ -203,7 +217,8 @@ describe('SignUpComponent', () => {
         await user.type(input, inputValue);
         await user.tab();
 
-        expect(screen.queryByText(message)).toBeInTheDocument();
+        let errorMessage = await screen.findByText(message);
+        expect(errorMessage).toBeInTheDocument();
       }
     );
 
