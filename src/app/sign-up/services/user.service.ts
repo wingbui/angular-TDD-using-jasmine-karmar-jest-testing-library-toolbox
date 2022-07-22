@@ -15,6 +15,6 @@ export class UserService {
 
   isEmailTaken(value: string) {
     console.log(value)
-    return this.http.post('/api/1.0/users/email', { email: value });
+    return this.http.post('/api/1.0/user/email', { email: value });
   }
 }
