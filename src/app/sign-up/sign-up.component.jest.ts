@@ -112,7 +112,7 @@ describe('SignUpComponent', () => {
       button = screen.getByRole('button', { name: 'Sign Up' });
     };
 
-    it('should enable the button when Password and Repeat Password match', async () => {
+    it('should enable the button when form is valid', async () => {
       await setup();
       await setupForm();
 

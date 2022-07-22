@@ -171,7 +171,7 @@ describe('SignUpComponent', () => {
       button = signUp.querySelector('button');
     };
 
-    it('should enable the button when Password and Repeat Password match', async () => {
+    it('should enable the button when form is valid', async () => {
       await setup();
       expect(button?.disabled).toBe(false);
     });
