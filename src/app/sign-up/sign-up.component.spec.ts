@@ -245,10 +245,8 @@ describe('SignUpComponent', () => {
       await setup();
 
       expect(
-        signUp.querySelector(
-          'ul[data-testid="email-validation"]'
-        ) as HTMLElement
-      ).toBeNull();
+        signUp.querySelector('ul[data-testid="email-validation"]')?.textContent
+      ).not.toContain('Email already in use');
 
       button?.click();
 
