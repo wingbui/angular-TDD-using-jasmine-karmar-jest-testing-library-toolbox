@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { HttpErrorResponse } from '@angular/common/http';
 
 import { passwordMatchValidator } from './validators/password-match-validator';
-import { UserService } from './services/user.service';
 import { SignUpRequest } from './types/sign-up-request';
 import { UniqueEmailValidator } from './validators/unique-email-validator';
+import { UserService } from './services/user.service';
+
 @Component({
   selector: 'app-sign-up',
   templateUrl: './sign-up.component.html',
@@ -80,8 +82,18 @@ export class SignUpComponent implements OnInit {
       password: this.form.get('password')?.value || '',
     };
 
-    this.userService.signUp(data).subscribe(() => {
-      this.isSuccess = true;
+    this.userService.signUp(data).subscribe({
+      next: () => {
+        this.isSuccess = true;
+      },
+      error: (httpError: HttpErrorResponse) => {
+        this.isSuccess = false;
+        const emailValidationErrorMessage =
+          httpError.error.validationErrors.email;
+        this.form
+          .get('email')
+          ?.setErrors({ backend: emailValidationErrorMessage });
+      },
     });
   }
 
