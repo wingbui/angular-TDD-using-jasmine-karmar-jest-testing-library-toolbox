@@ -7,15 +7,18 @@ import { AppComponent } from './app.component';
 import { SignUpComponent } from './sign-up/sign-up.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatButtonModule } from '@angular/material/button';
+import { HomeComponent } from './home/home.component';
+import { AppRouterModule } from './router/app-router/app-router.module';
 
 @NgModule({
-  declarations: [AppComponent, SignUpComponent],
+  declarations: [AppComponent, SignUpComponent, HomeComponent],
   imports: [
     BrowserModule,
     HttpClientModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
     MatButtonModule,
+    AppRouterModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
