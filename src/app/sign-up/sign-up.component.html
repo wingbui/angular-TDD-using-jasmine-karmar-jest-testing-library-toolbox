@@ -1,85 +1,87 @@
-<h1>Sign Up</h1>
+<div data-testid="sign-up-page">
+  <h1>Sign Up</h1>
 
-<div *ngIf="!isSuccess; else successMessage">
-  <form
-    (submit)="onClickSignUp(); $event.preventDefault()"
-    data-testid="sign-up-form"
-    [formGroup]="form"
-  >
-    <div>
-      <label for="username">Username</label>
-      <input id="username" formControlName="username" />
-      <ul
-        *ngIf="form.get('username')?.touched && form.get('username')?.errors"
-        data-testid="username-validation"
-      >
-        <li *ngIf="form.get('username')?.errors?.['required']">
-          Username is required
-        </li>
-        <li *ngIf="form.get('username')?.errors?.['minlength']">
-          Username should be 2 characters up
-        </li>
-      </ul>
-    </div>
-
-    <div>
-      <label for="email">Email</label>
-      <input id="email" placeholder="email" formControlName="email" />
-      <ul
-        *ngIf="form.get('email')?.touched && form.get('email')?.errors"
-        data-testid="email-validation"
-      >
-        <li *ngIf="form.get('email')?.errors?.['required']">
-          Email is required
-        </li>
-        <li *ngIf="form.get('email')?.errors?.['email']">Invalid Email</li>
-        <li *ngIf="form.get('email')?.errors?.['uniqueEmail']">
-          Email already in use
-        </li>
-        <li *ngIf="form.get('email')?.errors?.['backend']">
-          {{ form.get("email")?.errors?.["backend"] }}
-        </li>
-      </ul>
-    </div>
-
-    <div>
-      <label for="password">Password</label>
-      <input id="password" type="password" formControlName="password" />
-
-      <ul *ngIf="passwordError.length > 0" data-testid="password-validation">
-        <li *ngFor="let error of passwordError">{{ error }}</li>
-      </ul>
-    </div>
-
-    <div>
-      <label for="passwordRepeat">Password Repeat</label>
-      <input
-        id="passwordRepeat"
-        type="password"
-        formControlName="passwordRepeat"
-      />
-      <ul
-        *ngIf="passwordRepeatError.length > 0"
-        data-testid="passwordRepeat-validation"
-      >
-        <li *ngFor="let error of passwordRepeatError">{{ error }}</li>
-      </ul>
-    </div>
-
-    <button
-      mat-flat-button
-      color="primary"
-      [disabled]="isDisabled() || apiProgress"
+  <div *ngIf="!isSuccess; else successMessage">
+    <form
+      (submit)="onClickSignUp(); $event.preventDefault()"
+      data-testid="sign-up-form"
+      [formGroup]="form"
     >
-      <span *ngIf="apiProgress" role="status" aria-hidden="true"
-        >Submitting...</span
-      >
-      <span *ngIf="!apiProgress"> Sign Up </span>
-      <!-- {{ apiProgress ? "Submitting..." : "Sign Up" }} -->
-    </button>
-  </form>
-</div>
+      <div>
+        <label for="username">Username</label>
+        <input id="username" formControlName="username" />
+        <ul
+          *ngIf="form.get('username')?.touched && form.get('username')?.errors"
+          data-testid="username-validation"
+        >
+          <li *ngIf="form.get('username')?.errors?.['required']">
+            Username is required
+          </li>
+          <li *ngIf="form.get('username')?.errors?.['minlength']">
+            Username should be 2 characters up
+          </li>
+        </ul>
+      </div>
 
-<ng-template #successMessage>
-  <div class="alert-success" role="alert">Success! Activate email please</div>
-</ng-template>
+      <div>
+        <label for="email">Email</label>
+        <input id="email" placeholder="email" formControlName="email" />
+        <ul
+          *ngIf="form.get('email')?.touched && form.get('email')?.errors"
+          data-testid="email-validation"
+        >
+          <li *ngIf="form.get('email')?.errors?.['required']">
+            Email is required
+          </li>
+          <li *ngIf="form.get('email')?.errors?.['email']">Invalid Email</li>
+          <li *ngIf="form.get('email')?.errors?.['uniqueEmail']">
+            Email already in use
+          </li>
+          <li *ngIf="form.get('email')?.errors?.['backend']">
+            {{ form.get("email")?.errors?.["backend"] }}
+          </li>
+        </ul>
+      </div>
+
+      <div>
+        <label for="password">Password</label>
+        <input id="password" type="password" formControlName="password" />
+
+        <ul *ngIf="passwordError.length > 0" data-testid="password-validation">
+          <li *ngFor="let error of passwordError">{{ error }}</li>
+        </ul>
+      </div>
+
+      <div>
+        <label for="passwordRepeat">Password Repeat</label>
+        <input
+          id="passwordRepeat"
+          type="password"
+          formControlName="passwordRepeat"
+        />
+        <ul
+          *ngIf="passwordRepeatError.length > 0"
+          data-testid="passwordRepeat-validation"
+        >
+          <li *ngFor="let error of passwordRepeatError">{{ error }}</li>
+        </ul>
+      </div>
+
+      <button
+        mat-flat-button
+        color="primary"
+        [disabled]="isDisabled() || apiProgress"
+      >
+        <span *ngIf="apiProgress" role="status" aria-hidden="true"
+          >Submitting...</span
+        >
+        <span *ngIf="!apiProgress"> Sign Up </span>
+        <!-- {{ apiProgress ? "Submitting..." : "Sign Up" }} -->
+      </button>
+    </form>
+  </div>
+
+  <ng-template #successMessage>
+    <div class="alert-success" role="alert">Success! Activate email please</div>
+  </ng-template>
+</div>
