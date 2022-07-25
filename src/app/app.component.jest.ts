@@ -11,9 +11,10 @@ import { UserComponent } from './user/user.component';
 
 describe('Routing', () => {
   it.each`
-    path        | pageId
-    ${'/login'} | ${'login-page'}
-    ${'/user'}  | ${'user-page'}
+    path         | pageId
+    ${'/login'}  | ${'login-page'}
+    ${'/user/1'} | ${'user-page'}
+    ${'/user/2'} | ${'user-page'}
   `(`should navigate to the $pageId at $path`, async ({ path, pageId }) => {
     const { navigate } = await render(AppComponent, {
       declarations: [
