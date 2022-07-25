@@ -9,9 +9,11 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatButtonModule } from '@angular/material/button';
 import { HomeComponent } from './home/home.component';
 import { AppRouterModule } from './router/app-router/app-router.module';
+import { LoginComponent } from './login/login.component';
+import { UserComponent } from './user/user.component';
 
 @NgModule({
-  declarations: [AppComponent, SignUpComponent, HomeComponent],
+  declarations: [AppComponent, SignUpComponent, HomeComponent, LoginComponent, UserComponent],
   imports: [
     BrowserModule,
     HttpClientModule,

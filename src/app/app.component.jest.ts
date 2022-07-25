@@ -8,6 +8,11 @@ import { routes } from './router/app-router/app-router.module';
 import { SignUpComponent } from './sign-up/sign-up.component';
 
 describe('Routing', () => {
+
+  it.each`
+   
+
+  `
   it('should navigate to home page at /', async () => {
     const { navigate } = await render(AppComponent, {
       routes: routes,
