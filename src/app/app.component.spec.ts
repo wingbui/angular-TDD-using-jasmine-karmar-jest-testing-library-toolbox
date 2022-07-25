@@ -1,13 +1,14 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
 
 import { AppComponent } from './app.component';
-import { routes } from './router/app-router/app-router.module';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { SignUpComponent } from './sign-up/sign-up.component';
 import { HomeComponent } from './home/home.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { SignUpComponent } from './sign-up/sign-up.component';
+
+import { routes } from './router/app-router/app-router.module';
 
 describe('AppComponent', () => {
   let component: AppComponent;
@@ -39,6 +40,24 @@ describe('AppComponent', () => {
   });
 
   describe('Routing', () => {
+    const testCases = [
+      { path: '/login', pageId: 'login-page' },
+      { path: '/user/1', pageId: 'user-page' },
+      { path: '/user/2', pageId: 'user-page' },
+    ];
+
+    testCases.forEach((testCase) => {
+      it(`should navigate to ${testCase.pageId} page at path: ${testCase.path} `, async () => {
+        await router.navigate([testCase.path]);
+        fixture.detectChanges();
+
+        const app = fixture.nativeElement as HTMLElement;
+        expect(
+          app.querySelector(`[data-testid="${testCase.pageId}"`)
+        ).toBeTruthy();
+      });
+    });
+
     it('should navigate to home page at /', async () => {
       await router.navigate(['/']);
       fixture.detectChanges();
