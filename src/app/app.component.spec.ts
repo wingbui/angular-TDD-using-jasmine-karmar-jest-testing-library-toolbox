@@ -47,7 +47,7 @@ describe('AppComponent', () => {
     ];
 
     testCases.forEach((testCase) => {
-      it(`should navigate to ${testCase.pageId} page at path: ${testCase.path} `, async () => {
+      it(`should navigate to ${testCase.pageId} page at path "${testCase.path}"`, async () => {
         await router.navigate([testCase.path]);
         fixture.detectChanges();
 
@@ -58,7 +58,7 @@ describe('AppComponent', () => {
       });
     });
 
-    it('should navigate to home page at /', async () => {
+    it('should navigate to home page at path "/"', async () => {
       await router.navigate(['/']);
       fixture.detectChanges();
 
@@ -66,7 +66,7 @@ describe('AppComponent', () => {
       expect(app.querySelector('[data-testid="home-page"]')).toBeTruthy();
     });
 
-    it('should show sign-up page at /sign-up', async () => {
+    it('should should navigate to sign-up page at path "/sign-up"', async () => {
       await router.navigate(['/sign-up']);
       fixture.detectChanges();
 
