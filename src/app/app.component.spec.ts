@@ -47,7 +47,7 @@ describe('AppComponent', () => {
     ];
 
     testCases.forEach((testCase) => {
-      it(`should navigate to ${testCase.pageId} page at path "${testCase.path}"`, async () => {
+      it(`should display ${testCase.pageId} page when path is "${testCase.path}"`, async () => {
         await router.navigate([testCase.path]);
         fixture.detectChanges();
 
@@ -72,6 +72,24 @@ describe('AppComponent', () => {
 
       const app = fixture.nativeElement as HTMLElement;
       expect(app.querySelector('[data-testid="sign-up-page"]')).toBeTruthy();
+    });
+
+    const testLinks = [{ path: '/', title: 'Home' }];
+
+    testLinks.forEach((testLink) => {
+      it(
+        'should have a link with title ' +
+          testLink.title +
+          ' at ' +
+          testLink.path,
+        () => {
+          const app = fixture.nativeElement as HTMLElement;
+          const link = app.querySelector(
+            `a[title="${testLink.title}"]`
+          ) as HTMLAnchorElement;
+          expect(link.pathname).toEqual(testLink.path);
+        }
+      );
     });
   });
 });
