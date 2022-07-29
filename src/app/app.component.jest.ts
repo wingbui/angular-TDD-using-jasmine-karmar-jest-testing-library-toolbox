@@ -31,12 +31,9 @@ describe('Routing', () => {
     ${'/login'}  | ${'login-page'}
     ${'/user/1'} | ${'user-page'}
     ${'/user/2'} | ${'user-page'}
-  `(`should navigate to the $pageId at $path`, async ({ path, pageId }) => {
-    await setup(path);
-    expect(screen.getByTestId(pageId)).toBeInTheDocument();
-  });
-
-  it('should navigate to home page at /', async () => {
+    ${'/activate/123'} | ${'activation-page'}
+    ${'/activate/456'} | ${'activation-page'}
+  `('should display the page $pageId when path is $path', async () => {
     const { navigate } = await render(AppComponent, {
       routes: routes,
     });
@@ -45,7 +42,7 @@ describe('Routing', () => {
     expect(screen.getByTestId('home-page')).toBeInTheDocument();
   });
 
-  it('should navigate to sign-up page at /sign-up', async () => {
+  it('should display the page $pageId when path is /sign-up', async () => {
     const { navigate } = await render(AppComponent, {
       declarations: [HomeComponent, SignUpComponent],
       imports: [HttpClientTestingModule, ReactiveFormsModule],
