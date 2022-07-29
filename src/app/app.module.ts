@@ -11,9 +11,10 @@ import { HomeComponent } from './home/home.component';
 import { AppRouterModule } from './router/app-router/app-router.module';
 import { LoginComponent } from './login/login.component';
 import { UserComponent } from './user/user.component';
+import { ActivationComponent } from './activation/activation.component';
 
 @NgModule({
-  declarations: [AppComponent, SignUpComponent, HomeComponent, LoginComponent, UserComponent],
+  declarations: [AppComponent, SignUpComponent, HomeComponent, LoginComponent, UserComponent, ActivationComponent],
   imports: [
     BrowserModule,
     HttpClientModule,
