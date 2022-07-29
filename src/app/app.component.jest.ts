@@ -2,6 +2,7 @@ import { AppComponent } from './app.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { render, screen } from '@testing-library/angular';
+import userEvent from '@testing-library/user-event';
 
 import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
@@ -54,4 +55,30 @@ describe('Routing', () => {
     await navigate('/sign-up');
     expect(screen.getByTestId('sign-up-page')).toBeInTheDocument();
   });
+
+  it.each`
+    path   | title
+    ${'/'} | ${'Home'}
+  `('should have link $path with title $title', async ({ path, title }) => {
+    await setup(path);
+    const link = screen.queryByRole('link', { name: title });
+    expect(link).toBeInTheDocument();
+  });
+
+  it.each`
+    initialPath   | clickingTo   | visiblePage
+    ${'/'}        | ${'Sign Up'} | ${'sign-up-page'}
+    ${'/sign-up'} | ${'Home'}    | ${'home-page'}
+  `(
+    'should navigate to $clickingTo page when $initialPath is clicked',
+    async ({ initialPath, clickingTo, visiblePage }) => {
+      await setup(initialPath);
+      const link = screen.getByRole('link', { name: clickingTo });
+
+      const user = userEvent;
+      await user.click(link);
+
+      expect(screen.getByTestId(visiblePage)).toBeInTheDocument();
+    }
+  );
 });
