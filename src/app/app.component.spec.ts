@@ -1,4 +1,9 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {
+  ComponentFixture,
+  fakeAsync,
+  TestBed,
+  tick,
+} from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -44,6 +49,7 @@ describe('AppComponent', () => {
       { path: '/login', pageId: 'login-page' },
       { path: '/user/1', pageId: 'user-page' },
       { path: '/user/2', pageId: 'user-page' },
+      { path: '/user/2', pageId: 'user-page' },
     ];
 
     testCases.forEach((testCase) => {
@@ -58,7 +64,7 @@ describe('AppComponent', () => {
       });
     });
 
-    it('should navigate to home page at path "/"', async () => {
+    it('should should display home page when path is  "/"', async () => {
       await router.navigate(['/']);
       fixture.detectChanges();
 
@@ -66,7 +72,7 @@ describe('AppComponent', () => {
       expect(app.querySelector('[data-testid="home-page"]')).toBeTruthy();
     });
 
-    it('should should navigate to sign-up page at path "/sign-up"', async () => {
+    it('should should display sign-up page when path is "/sign-up"', async () => {
       await router.navigate(['/sign-up']);
       fixture.detectChanges();
 
@@ -74,7 +80,11 @@ describe('AppComponent', () => {
       expect(app.querySelector('[data-testid="sign-up-page"]')).toBeTruthy();
     });
 
-    const testLinks = [{ path: '/', title: 'Home' }];
+    const testLinks = [
+      { path: '/', title: 'Home' },
+      { path: '/sign-up', title: 'Sign Up' },
+      { path: '/login', title: 'Login' },
+    ];
 
     testLinks.forEach((testLink) => {
       it(
@@ -89,6 +99,54 @@ describe('AppComponent', () => {
           ) as HTMLAnchorElement;
           expect(link.pathname).toEqual(testLink.path);
         }
+      );
+    });
+
+    const navigationTests = [
+      {
+        initialPath: '/',
+        clickingTo: 'Sign Up',
+        visiblePage: 'sign-up-page',
+      },
+      {
+        initialPath: '/sign-up',
+        clickingTo: 'Home',
+        visiblePage: 'home-page',
+      },
+      {
+        initialPath: '/',
+        clickingTo: 'Login',
+        visiblePage: 'login-page',
+      },
+      {
+        initialPath: '/login',
+        clickingTo: 'Home',
+        visiblePage: 'home-page',
+      },
+    ];
+
+    navigationTests.forEach((test) => {
+      it(
+        'should navigate to ' +
+          test.clickingTo +
+          ' page when ' +
+          test.initialPath +
+          ' is clicked',
+        fakeAsync(async () => {
+          await router.navigate([test.initialPath]);
+
+          const app = fixture.nativeElement as HTMLElement;
+          const link = app.querySelector(
+            `a[title="${test.clickingTo}"]`
+          ) as HTMLAnchorElement;
+          link.click();
+          tick();
+          fixture.detectChanges();
+
+          expect(
+            app.querySelector('[data-testid="' + test.visiblePage + '"]')
+          ).toBeTruthy();
+        })
       );
     });
   });
