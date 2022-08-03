@@ -8,7 +8,7 @@ import { UserService } from '../sign-up/services/user.service';
   styleUrls: ['./activation.component.css'],
 })
 export class ActivationComponent implements OnInit {
-  activationStatus?: 'success' | 'failure';
+  activationStatus?: 'success' | 'failure' | 'in-progress';
 
   constructor(
     private route: ActivatedRoute,
@@ -17,6 +17,7 @@ export class ActivationComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params.subscribe((params: Params) => {
+      this.activationStatus = 'in-progress';
       this.userService.activate(params['token']).subscribe({
         next: () => {
           this.activationStatus = 'success';

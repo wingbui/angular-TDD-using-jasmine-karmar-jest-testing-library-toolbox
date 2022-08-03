@@ -4,6 +4,7 @@
   <app-alert *ngIf="activationStatus === 'failure'" type="danger">
     Your account activation failed
   </app-alert>
+  <app-alert *ngIf="activationStatus === 'in-progress'">Loading...</app-alert>
   {{activationStatus}}
   <p>
     <a title="Login" routerLink="/login">Login</a>

@@ -75,4 +75,21 @@ describe('ActivationComponent', () => {
       'Your account activation failed'
     );
   });
+
+  it('should show Loading... when activation request is initialized', () => {
+    subscriber.next({ token: '123' });
+
+    const request = httpController.expectOne(
+      '/api/1.0/users/activate/token/123'
+    );
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('.alert').textContent).toContain(
+      'Loading...'
+    );
+    request.flush({});
+    fixture.detectChanges();
+    expect(
+      fixture.nativeElement.querySelector('.alert').textContent
+    ).not.toContain('Loading...');
+  });
 });
