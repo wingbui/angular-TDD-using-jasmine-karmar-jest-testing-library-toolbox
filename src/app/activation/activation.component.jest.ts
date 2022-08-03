@@ -75,4 +75,14 @@ describe('ActivationComponent', () => {
     const message = await screen.findByText('Your account activation failed');
     expect(message).toBeInTheDocument();
   });
+
+  it('should display Loading... when activation is in progress', async () => {
+    await setup();
+    subscriber.next({ token: '456' });
+    const message = await screen.findByText('Loading...');
+    expect(
+      await screen.findByText('Your account activation failed')
+    ).toBeInTheDocument();
+    expect(message).not.toBeInTheDocument();
+  });
 });
