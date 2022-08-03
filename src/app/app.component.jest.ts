@@ -27,10 +27,10 @@ describe('Routing', () => {
   };
 
   it.each`
-    path         | pageId
-    ${'/login'}  | ${'login-page'}
-    ${'/user/1'} | ${'user-page'}
-    ${'/user/2'} | ${'user-page'}
+    path               | pageId
+    ${'/login'}        | ${'login-page'}
+    ${'/user/1'}       | ${'user-page'}
+    ${'/user/2'}       | ${'user-page'}
     ${'/activate/123'} | ${'activation-page'}
     ${'/activate/456'} | ${'activation-page'}
   `('should display the page $pageId when path is $path', async () => {
