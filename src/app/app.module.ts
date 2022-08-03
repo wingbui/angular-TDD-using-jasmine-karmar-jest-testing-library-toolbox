@@ -12,9 +12,17 @@ import { AppRouterModule } from './router/app-router/app-router.module';
 import { LoginComponent } from './login/login.component';
 import { UserComponent } from './user/user.component';
 import { ActivationComponent } from './activation/activation.component';
+import { AlertModule } from './shared/modules/alert/alert.module';
 
 @NgModule({
-  declarations: [AppComponent, SignUpComponent, HomeComponent, LoginComponent, UserComponent, ActivationComponent],
+  declarations: [
+    AppComponent,
+    SignUpComponent,
+    HomeComponent,
+    LoginComponent,
+    UserComponent,
+    ActivationComponent,
+  ],
   imports: [
     BrowserModule,
     HttpClientModule,
@@ -22,6 +30,7 @@ import { ActivationComponent } from './activation/activation.component';
     BrowserAnimationsModule,
     MatButtonModule,
     AppRouterModule,
+    AlertModule
   ],
   providers: [],
   bootstrap: [AppComponent],

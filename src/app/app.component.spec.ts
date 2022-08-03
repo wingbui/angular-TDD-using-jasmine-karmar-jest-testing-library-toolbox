@@ -14,6 +14,8 @@ import { HomeComponent } from './home/home.component';
 import { SignUpComponent } from './sign-up/sign-up.component';
 
 import { routes } from './router/app-router/app-router.module';
+import { AlertModule } from './shared/modules/alert/alert.module';
+import { ActivationComponent } from './activation/activation.component';
 
 describe('AppComponent', () => {
   let component: AppComponent;
@@ -22,11 +24,12 @@ describe('AppComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [AppComponent, HomeComponent, SignUpComponent],
+      declarations: [AppComponent, HomeComponent, SignUpComponent, ActivationComponent],
       imports: [
         HttpClientTestingModule,
         RouterTestingModule.withRoutes(routes),
         ReactiveFormsModule,
+        AlertModule
       ],
     }).compileComponents();
 

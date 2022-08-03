@@ -8,11 +8,23 @@ import { UserService } from '../sign-up/services/user.service';
   styleUrls: ['./activation.component.css'],
 })
 export class ActivationComponent implements OnInit {
-  constructor(private route: ActivatedRoute, private userService: UserService) {}
+  activationStatus?: 'success' | 'failure';
+
+  constructor(
+    private route: ActivatedRoute,
+    private userService: UserService
+  ) {}
 
   ngOnInit(): void {
     this.route.params.subscribe((params: Params) => {
-      this.userService.activate(params['token']).subscribe();
+      this.userService.activate(params['token']).subscribe({
+        next: () => {
+          this.activationStatus = 'success';
+        },
+        error: () => {
+          this.activationStatus = 'failure';
+        },
+      });
     });
   }
 }
