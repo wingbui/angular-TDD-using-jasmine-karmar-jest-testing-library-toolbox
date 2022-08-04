@@ -13,6 +13,7 @@ import { LoginComponent } from './login/login.component';
 import { UserComponent } from './user/user.component';
 import { ActivationComponent } from './activation/activation.component';
 import { AlertModule } from './shared/modules/alert/alert.module';
+import { UserListComponent } from './home/user-list/user-list.component';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { AlertModule } from './shared/modules/alert/alert.module';
     LoginComponent,
     UserComponent,
     ActivationComponent,
+    UserListComponent,
   ],
   imports: [
     BrowserModule,

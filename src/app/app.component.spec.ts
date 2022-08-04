@@ -16,6 +16,7 @@ import { SignUpComponent } from './sign-up/sign-up.component';
 import { routes } from './router/app-router/app-router.module';
 import { AlertModule } from './shared/modules/alert/alert.module';
 import { ActivationComponent } from './activation/activation.component';
+import { UserListComponent } from './home/user-list/user-list.component';
 
 describe('AppComponent', () => {
   let component: AppComponent;
@@ -24,12 +25,18 @@ describe('AppComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [AppComponent, HomeComponent, SignUpComponent, ActivationComponent],
+      declarations: [
+        AppComponent,
+        HomeComponent,
+        SignUpComponent,
+        ActivationComponent,
+        UserListComponent,
+      ],
       imports: [
         HttpClientTestingModule,
         RouterTestingModule.withRoutes(routes),
         ReactiveFormsModule,
-        AlertModule
+        AlertModule,
       ],
     }).compileComponents();
 

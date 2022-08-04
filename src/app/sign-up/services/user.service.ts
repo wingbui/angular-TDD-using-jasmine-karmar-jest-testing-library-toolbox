@@ -20,4 +20,8 @@ export class UserService {
   activate(token: string) {
     return this.http.post('/api/1.0/users/activate/token/' + token, {});
   }
+
+  getUsers() {
+    return this.http.get('/api/1.0/users');
+  }
 }
